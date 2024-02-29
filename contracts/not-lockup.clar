@@ -64,9 +64,11 @@
     (let (
             (recipient tx-sender)
             (lock-block (var-get lock-block-height))
+            (next-total (- (var-get total-locked) amount))
             (locked-amount (get-locked-per-address-internal recipient)))
         (asserts! (or (is-eq lock-block u0) (> lock-block burn-block-height)) (err u900))
         (asserts! (> locked-amount u0) (err u800))
+        (var-set total-locked next-total)
         (map-set locked-per-address recipient u0)
         (as-contract (transfer-mno recipient locked-amount))))
 
