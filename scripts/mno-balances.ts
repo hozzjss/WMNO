@@ -58,14 +58,17 @@ try {
   const balances = processCSV(data);
 
   let total = 0;
-  let outputData = "{\n";
-  for (let [address, balance] of balances.entries()) {
-    if (balance && address !== brad) {
-      outputData += `'${address}: u${balance}\n`;
+  let outputData = "";
+  const sortedBalances = Array.from(balances.entries()).sort(
+    ([, balanceA], [, balanceB]) => balanceB - balanceA
+  );
+  for (let [address, balance] of sortedBalances) {
+    if (balance && address !== brad && !address.includes(".")) {
+      outputData += `(map-insert mno-snapshot '${address} u${balance})\n`;
       total += balance;
     }
   }
-  outputData += "\n}";
+
   console.log("total is", total.toLocaleString());
 
   fs.writeFileSync("./data/output.txt", outputData);
