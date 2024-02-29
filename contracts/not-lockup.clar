@@ -15,16 +15,6 @@
 
 (define-data-var lock-block-height uint u0)
 
-(define-public (update-snapshot-block (block (buff 32)))
-    (let (
-        (snapshot-chances (var-get snapshot-changes-remaining))
-    ) 
-    (asserts! (is-eq tx-sender HAZ) (err "you not papa"))
-    (asserts! (> snapshot-chances u0) (err "too much papa"))
-    (var-set snapshot-changes-remaining (+ snapshot-chances u1))
-    (var-set snapshot-block block)
-    (ok true)))
-
 ;; 88,975,877,083,900
 
 
@@ -74,11 +64,11 @@
 
 
 (define-private (get-allowed-mno-amount (address principal))
-    (exclude address
-        (default-to u0 (map-get? mno-snapshot address))))
+        (default-to u0 (map-get? mno-snapshot address)))
 
 (define-private (lock-wmno-internal (amount uint) (recipient principal)) 
     (begin 
+        (asserts! (is-eq u0 (get-locked-per-address-internal tx-sender)) (err u800))
         (try! (contract-call? .wrapped-nothing-v8 unwrap amount))
         (lock-mno-internal amount recipient)))
 
@@ -97,13 +87,29 @@
                         (contract-call? .wrapped-nothing-v8 get-balance address))))))
 
 (define-public (lock-wmno)
-    (begin
         ;; can only wrap once
-        (asserts! (is-eq u0 (get-locked-per-address-internal tx-sender)) (err u800))
-        (lock-wmno-internal (get-allowed-wmno-amount tx-sender) tx-sender)))
+        (lock-wmno-internal (get-allowed-wmno-amount tx-sender) tx-sender))
+
+(define-public (lock-mno-and-wmno) 
+    (let (
+        (mno-amount (get-allowed-mno-amount tx-sender))
+    )
+    (asserts! (> mno-amount u0) (err u100))
+    (try! (contract-call? .wrapped-nothing-v8 wrap-nthng mno-amount))
+    (lock-wmno)))
 
 (define-public (unlock-wmno)
         (unlock-wmno-internal (get-locked-per-address-internal tx-sender) tx-sender))
+
+(define-public (update-snapshot-block (block (buff 32)))
+    (let (
+        (snapshot-chances (var-get snapshot-changes-remaining))
+    ) 
+    (asserts! (is-eq tx-sender HAZ) (err "you not papa"))
+    (asserts! (> snapshot-chances u0) (err "too much papa"))
+    (var-set snapshot-changes-remaining (+ snapshot-chances u1))
+    (var-set snapshot-block block)
+    (ok true)))
 
 ;; API
 (define-read-only (get-locked-total)
