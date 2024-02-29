@@ -2,7 +2,7 @@
 (define-constant ERR-YOU-POOR u1001)
 
 ;; 88,975,877,083,900
-(define-fungible-token not-token u88975877083900)
+(define-fungible-token NOT u88975877083900)
 (define-map claimed-per-address principal uint)
 
 (define-private (get-claimed-per-address-internal (address principal)) 
@@ -20,8 +20,8 @@
         )
         (asserts! (> claimable u0) (err ERR-YOU-POOR))
         (map-set claimed-per-address tx-sender new-claimed)
-        (ft-mint? not-token claimable tx-sender)
+        (ft-mint? NOT claimable tx-sender)
     ))
 ;; sip 10
 (define-read-only (get-balance (address principal))
-    (ok (ft-get-balance not-token address)))
+    (ok (ft-get-balance NOT address)))
