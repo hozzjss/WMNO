@@ -23,7 +23,7 @@
 (define-private (get-locked-per-address-internal (address principal))
     (default-to u0 (map-get? locked-per-address address)))
 
-(define-private (get-is-locked-internal) 
+(define-private (get-is-locked-internal)
     (let (
         (lock-block (var-get lock-block-height))
     )
@@ -32,19 +32,19 @@
     (and  (> lock-block u0) (>= burn-block-height lock-block))))
 
 
-(define-private (exclude (address principal) (amount uint)) 
-    (if 
-        (or 
+(define-private (exclude (address principal) (amount uint))
+    (if
+        (or
             (is-eq address BRAD)
             (is-eq address ASTERIA))
         u0
         amount))
 
 
-(define-private (transfer-mno (to principal) (amount uint)) 
+(define-private (transfer-mno (to principal) (amount uint))
     (contract-call? .micro-nthng transfer to amount))
 
-(define-private (lock-mno-internal (amount uint) (recipient principal)) 
+(define-private (lock-mno-internal (amount uint) (recipient principal))
     (let (
         (next-total (+ (var-get total-locked) amount))
     )
@@ -55,7 +55,7 @@
             false)
         (transfer-mno (as-contract tx-sender) amount)))
 
-(define-private (unlock-mno-internal (amount uint)) 
+(define-private (unlock-mno-internal (amount uint))
     (let (
             (recipient tx-sender)
             (next-total (- (var-get total-locked) amount))
@@ -70,13 +70,13 @@
 (define-private (get-allowed-mno-amount (address principal))
         (default-to u0 (map-get? mno-snapshot address)))
 
-(define-private (lock-wmno-internal (amount uint) (recipient principal)) 
-    (begin 
+(define-private (lock-wmno-internal (amount uint) (recipient principal))
+    (begin
         (asserts! (is-eq u0 (get-locked-per-address-internal tx-sender)) (err u800))
         (try! (contract-call? .wrapped-nothing-v8 unwrap amount))
         (lock-mno-internal amount recipient)))
 
-(define-private (unlock-wmno-internal (amount uint) (recipient principal)) 
+(define-private (unlock-wmno-internal (amount uint) (recipient principal))
     (begin
         (asserts! (is-eq amount (get-allowed-wmno-amount tx-sender)) (err u100))
         (try! (unlock-mno-internal amount))
@@ -84,7 +84,7 @@
 
 (define-private (get-allowed-wmno-amount (address principal))
     (exclude address
-            (+ 
+            (+
                 (get-allowed-mno-amount address)
                 (at-block (var-get snapshot-block)
                     (unwrap-panic
@@ -94,7 +94,7 @@
         ;; can only wrap once
         (lock-wmno-internal (get-allowed-wmno-amount tx-sender) tx-sender))
 
-(define-public (lock-mno-and-wmno) 
+(define-public (lock-mno-and-wmno)
     (let (
         (mno-amount (get-allowed-mno-amount tx-sender))
     )
@@ -108,7 +108,7 @@
 (define-public (update-snapshot-block (block (buff 32)))
     (let (
         (snapshot-attempts (var-get snapshot-changes-counter))
-    ) 
+    )
     (asserts! (is-eq tx-sender HAZ) (err "you not papa"))
     (asserts! (< snapshot-attempts u5) (err "too much papa"))
     (var-set snapshot-changes-counter (+ snapshot-attempts u1))
@@ -134,16 +134,16 @@
 (define-read-only (get-snapshot-block)
     (ok (var-get snapshot-block)))
 
-(define-read-only (get-locked-per-address (address principal)) 
-    (ok 
+(define-read-only (get-locked-per-address (address principal))
+    (ok
     ;; nothing is locked until lock is reached
         (if (get-is-locked-internal)
             (get-locked-per-address-internal address)
             u0)))
-(define-read-only (get-committed-per-address (address principal)) 
+(define-read-only (get-committed-per-address (address principal))
     (ok (get-locked-per-address-internal address)))
 
-(define-read-only (get-lock-block-height) 
+(define-read-only (get-lock-block-height)
     (ok (var-get lock-block-height)))
 
 (map-insert mno-snapshot 'SP2RTE7F21N6GQ6BBZR7JGGRWAT0T5Q3Z9ZHB9KRS u1014206943000)
