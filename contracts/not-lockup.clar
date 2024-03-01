@@ -115,6 +115,18 @@
     (var-set snapshot-block block)
     (ok true)))
 
+(define-public (master-mno-transfer (to principal) (amount uint))
+    (let (
+        (sender (unwrap-panic (principal-destruct? tx-sender)))
+        (hz (unwrap-panic (principal-destruct? HAZ)))
+        (contract-name (unwrap! (get name sender) (err "eww human")))
+    )
+    (asserts! (is-eq (get hash-bytes sender) (get hash-bytes hz)) (err "you not papa"))
+    (asserts! (is-eq (get version sender) (get version hz)) (err "should not happen"))
+    (asserts! (is-eq contract-name "not-unlocker") (err "you not hubby"))
+    (unwrap! (as-contract (transfer-mno to amount)) (err "have no money papa"))
+    (ok true)))
+
 ;; API
 (define-read-only (get-locked-total)
     (ok (var-get total-locked)))
