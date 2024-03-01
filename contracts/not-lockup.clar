@@ -4,10 +4,7 @@
 (define-constant SUPPLY-THRESHOLD (/ u88975877083900 u4))
 
 
-(define-data-var snapshot-block (buff 32) 
-    (match (get-block-info? id-header-hash (- block-height u1))
-    height height
-    0x304c25f4197ee8454f298442c94130c545b8cd6a8e6795ae3354aae24c416028))
+(define-data-var snapshot-block (buff 32) 0x8e38b149cff35c31409785335a1dba57ebd37db55316842f2c5bca142f77435b)
 
 (define-data-var snapshot-changes-remaining uint u5)
 
@@ -25,6 +22,14 @@
 
 (define-private (get-locked-per-address-internal (address principal))
     (default-to u0 (map-get? locked-per-address address)))
+
+(define-private (get-is-locked-internal) 
+    (let (
+        (lock-block (var-get lock-block-height))
+    )
+    ;; if lock block is larger than 0 then it has been set
+    ;; if the current burn-height is greater than the lock block then tokens are locked
+    (and  (> lock-block u0) (>= burn-block-height lock-block))))
 
 
 (define-private (exclude (address principal) (amount uint)) 
@@ -53,10 +58,9 @@
 (define-private (unlock-mno-internal (amount uint)) 
     (let (
             (recipient tx-sender)
-            (lock-block (var-get lock-block-height))
             (next-total (- (var-get total-locked) amount))
             (locked-amount (get-locked-per-address-internal recipient)))
-        (asserts! (or (is-eq lock-block u0) (> lock-block burn-block-height)) (err u900))
+        (asserts! (not (get-is-locked-internal)) (err u900))
         (asserts! (> locked-amount u0) (err u800))
         (var-set total-locked next-total)
         (map-set locked-per-address recipient u0)
@@ -119,6 +123,12 @@
     (ok (var-get snapshot-block)))
 
 (define-read-only (get-locked-per-address (address principal)) 
+    (ok 
+    ;; nothing is locked until lock is reached
+        (if (get-is-locked-internal)
+            (get-locked-per-address-internal address)
+            u0)))
+(define-read-only (get-committed-per-address (address principal)) 
     (ok (get-locked-per-address-internal address)))
 
 (define-read-only (get-lock-block-height) 

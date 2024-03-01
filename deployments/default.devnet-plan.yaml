@@ -25,7 +25,7 @@ plan:
         - contract-publish:
             contract-name: wrapped-nothing-v8
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 25200
+            cost: 25220
             path: contracts/wrapped-nothing-v8.clar
             anchor-block-only: true
             clarity-version: 1
@@ -68,17 +68,17 @@ plan:
             anchor-block-only: true
             clarity-version: 2
         - contract-publish:
-            contract-name: wmno-wrap-trait
+            contract-name: not-lockup
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 3430
-            path: contracts/wmno-wrap-trait.clar
+            cost: 491940
+            path: contracts/not-lockup.clar
             anchor-block-only: true
             clarity-version: 2
         - contract-publish:
-            contract-name: wrapped-nothing-v9
+            contract-name: not-token
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 53930
-            path: contracts/wrapped-nothing-v9.clar
+            cost: 9080
+            path: contracts/not-token.clar
             anchor-block-only: true
             clarity-version: 2
       epoch: "2.4"

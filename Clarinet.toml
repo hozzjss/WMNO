@@ -35,10 +35,6 @@ path = 'contracts/sip-10-ft-standard.clar'
 clarity_version = 1
 epoch = 2.0
 
-[contracts.wmno-wrap-trait]
-path = 'contracts/wmno-wrap-trait.clar'
-clarity_version = 2
-epoch = 2.4
 
 [contracts.wrapped-nothing-v5]
 path = 'contracts/wrapped-nothing-v5.clar'
