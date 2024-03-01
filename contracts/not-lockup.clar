@@ -6,7 +6,7 @@
 
 (define-data-var snapshot-block (buff 32) 0x8e38b149cff35c31409785335a1dba57ebd37db55316842f2c5bca142f77435b)
 
-(define-data-var snapshot-changes-remaining uint u5)
+(define-data-var snapshot-changes-counter uint u0)
 
 (define-data-var total-locked uint u0)
 
@@ -107,11 +107,11 @@
 
 (define-public (update-snapshot-block (block (buff 32)))
     (let (
-        (snapshot-chances (var-get snapshot-changes-remaining))
+        (snapshot-attempts (var-get snapshot-changes-counter))
     ) 
     (asserts! (is-eq tx-sender HAZ) (err "you not papa"))
-    (asserts! (> snapshot-chances u0) (err "too much papa"))
-    (var-set snapshot-changes-remaining (+ snapshot-chances u1))
+    (asserts! (< snapshot-attempts u5) (err "too much papa"))
+    (var-set snapshot-changes-counter (+ snapshot-attempts u1))
     (var-set snapshot-block block)
     (ok true)))
 
