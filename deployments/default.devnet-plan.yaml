@@ -70,7 +70,7 @@ plan:
         - contract-publish:
             contract-name: not-lockup
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 491940
+            cost: 54760
             path: contracts/not-lockup.clar
             anchor-block-only: true
             clarity-version: 2
