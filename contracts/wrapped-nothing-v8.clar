@@ -82,5 +82,3 @@
     (fold check-err
         (map send-nothing-unwrap recipients)
         (ok true)))
-
-(wrap-nthng u20600000000000)
