@@ -4,7 +4,9 @@ description = ''
 authors = []
 telemetry = false
 cache_dir = './.cache'
-requirements = []
+
+[[project.requirements]]
+contract_id = 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-10-ft-standard.ft-trait'
 [contracts.airdrop]
 path = 'contracts/airdrop.clar'
 clarity_version = 2
@@ -15,15 +17,15 @@ path = 'contracts/fis-com-fis-sev.clar'
 clarity_version = 2
 epoch = 2.4
 
-[contracts.micro-nthng]
-path = 'contracts/micro-nthng.clar'
-clarity_version = 1
-epoch = 2.0
-
 [contracts.genesis-wrapper]
 path = 'contracts/genesis-wrapper.clar'
 clarity_version = 2
 epoch = 2.4
+
+[contracts.micro-nthng]
+path = 'contracts/micro-nthng.clar'
+clarity_version = 1
+epoch = 2.0
 
 [contracts.sip-010-trait-ft-standard]
 path = 'contracts/sip-010-trait-ft-standard.clar'
@@ -34,7 +36,6 @@ epoch = 2.0
 path = 'contracts/sip-10-ft-standard.clar'
 clarity_version = 1
 epoch = 2.0
-
 
 [contracts.wrapped-nothing-v5]
 path = 'contracts/wrapped-nothing-v5.clar'
@@ -61,9 +62,7 @@ clarity_wasm_mode = false
 show_timings = false
 
 [repl.analysis]
-passes = [
-    "check_checker"
-]
+passes = ['check_checker']
 
 [repl.analysis.check_checker]
 strict = false

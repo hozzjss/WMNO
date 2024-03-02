@@ -7,7 +7,7 @@
 
 ;; 88,975,877,083,900
 (define-constant MAX-SUPPLY u88975877083900)
-(impl-trait .sip-010-trait-ft-standard.sip-010-trait)
+(impl-trait 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-10-ft-standard.ft-trait)
 
 (define-data-var contract-admin principal tx-sender)
 
