@@ -46,6 +46,7 @@
         (asserts! (is-eq from tx-sender) (err ERR-UNAUTHORIZED))
         (asserts! (not (is-eq to tx-sender)) (err ERR-INVALID-PARAMS))
         (asserts! (>= (ft-get-balance NOT from) amount) (err ERR-YOU-POOR))
+        (print (default-to 0x memo))
         (ft-transfer? NOT amount from to)))
 
 
