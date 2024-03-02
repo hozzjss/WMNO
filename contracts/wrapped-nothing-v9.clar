@@ -6,6 +6,8 @@
 (define-constant ERR-YOU-POOR u2)
 (define-constant ERR-YOU-FOMOD u3)
 (define-constant ERR-INVALID-PARAMS u4)
+
+;; 88,975,877,083,900
 (define-constant MAX-SUPPLY u88975877083900)
 (impl-trait .sip-010-trait-ft-standard.sip-010-trait)
 

@@ -9,27 +9,12 @@
 
 (define-data-var total-committed uint u0)
 
-(define-data-var lock-block-height uint u0)
-
-;; 88,975,877,083,900
-
-
 (define-map committed-per-address principal uint)
 (define-map did-wrap-before principal bool)
 (define-map mno-snapshot principal uint)
 
-
-
 (define-private (get-committed-per-address-internal (address principal))
     (default-to u0 (map-get? committed-per-address address)))
-
-(define-private (get-is-locked-internal)
-    (let (
-        (lock-block (var-get lock-block-height))
-    )
-    ;; if lock block is larger than 0 then it has been set
-    ;; if the current burn-height is greater than the lock block then tokens are locked
-    (and  (> lock-block u0) (>= burn-block-height lock-block))))
 
 
 (define-private (exclude (address principal) (amount uint))
@@ -45,9 +30,6 @@
 
 (define-private (unwrap-mno (amount uint)) 
     (contract-call? .wrapped-nothing-v9 unwrap amount))
-
-(define-private (transfer-mno (to principal) (amount uint))
-    (contract-call? .micro-nthng transfer to amount))
 
 (define-private (genesis-wrap-mno-internal (amount uint) (recipient principal))
     (begin
@@ -111,19 +93,8 @@
 (define-read-only (get-snapshot-block)
     (ok SNAPSHOT-BLOCK))
 
-(define-read-only (get-locked-per-address (address principal))
-    (ok
-    ;; nothing is locked until lock is reached
-        (if (get-is-locked-internal)
-            (get-committed-per-address-internal address)
-            u0)))
 (define-read-only (get-committed-per-address (address principal))
     (ok (get-committed-per-address-internal address)))
 
-(define-read-only (get-lock-block-height)
-    (ok (var-get lock-block-height)))
-
 (define-read-only (get-allowed-mno-amount (address principal))
     (ok (get-allowed-mno-amount-internal address)))
-
-(map-insert mno-snapshot tx-sender u38800000000000)
