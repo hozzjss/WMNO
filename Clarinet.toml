@@ -5,9 +5,10 @@ authors = []
 telemetry = false
 cache_dir = './.cache'
 
-
 [[project.requirements]]
 contract_id = 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard'
+[[project.requirements]]
+contract_id = 'SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ.micro-nthng'
 
 [contracts.airdrop]
 path = 'contracts/airdrop.clar'
@@ -23,31 +24,6 @@ epoch = 2.4
 path = 'contracts/genesis-wrapper.clar'
 clarity_version = 2
 epoch = 2.4
-
-[contracts.micro-nthng]
-path = 'contracts/micro-nthng.clar'
-clarity_version = 1
-epoch = 2.0
-
-[contracts.sip-010-trait-ft-standard]
-path = 'contracts/sip-010-trait-ft-standard.clar'
-clarity_version = 1
-epoch = 2.0
-
-[contracts.sip-10-ft-standard]
-path = 'contracts/sip-10-ft-standard.clar'
-clarity_version = 1
-epoch = 2.0
-
-[contracts.wrapped-nothing-v5]
-path = 'contracts/wrapped-nothing-v5.clar'
-clarity_version = 1
-epoch = 2.0
-
-[contracts.wrapped-nothing-v6]
-path = 'contracts/wrapped-nothing-v6.clar'
-clarity_version = 1
-epoch = 2.0
 
 [contracts.wrapped-nothing-v8]
 path = 'contracts/wrapped-nothing-v8.clar'

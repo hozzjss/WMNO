@@ -3,7 +3,7 @@
 (define-fungible-token wrapped-nthng)
 (define-data-var token-uri (optional (string-utf8 256)) none)
 (define-constant contract-creator tx-sender)
-(impl-trait .sip-010-trait-ft-standard.sip-010-trait)
+(impl-trait 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.sip-010-trait)
 
 (define-public (donate (amount uint)) 
     (stx-transfer? amount tx-sender contract-creator))
@@ -11,7 +11,7 @@
 (define-public (wrap-nthng (amount uint))
     (if
         (is-ok
-            (contract-call? .micro-nthng transfer (as-contract tx-sender) amount))
+            (contract-call? 'SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ.micro-nthng transfer (as-contract tx-sender) amount))
         (begin
             (ft-mint?
                 wrapped-nthng amount tx-sender)
@@ -23,7 +23,7 @@
     (if 
         (is-ok (ft-burn? wrapped-nthng amount tx-sender))
             (let ((unwrapper tx-sender))
-                (as-contract (contract-call? .micro-nthng transfer unwrapper amount)))
+                (as-contract (contract-call? 'SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ.micro-nthng transfer unwrapper amount)))
         (err ERR-YOU-POOR)
     ))
 

@@ -27,7 +27,7 @@
 (define-public (wrap-nthng (amount uint))
     (begin
         (asserts! (is-safe-to-wrap amount tx-sender) (err ERR-UNAUTHORIZED))
-        (unwrap! (contract-call? .micro-nthng transfer (as-contract tx-sender) amount) (err ERR-YOU-POOR))
+        (unwrap! (contract-call? 'SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ.micro-nthng transfer (as-contract tx-sender) amount) (err ERR-YOU-POOR))
         (ft-mint? NOT amount tx-sender)))
 
 
@@ -37,7 +37,7 @@
     )
         (asserts! (>= (ft-get-balance NOT tx-sender) amount) (err ERR-YOU-POOR))
         (unwrap-panic (ft-burn? NOT amount tx-sender))
-        (as-contract (contract-call? .micro-nthng transfer unwrapper amount))))
+        (as-contract (contract-call? 'SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ.micro-nthng transfer unwrapper amount))))
 
 ;;;;;;;;;;;;;;;;;;;;; SIP 010 ;;;;;;;;;;;;;;;;;;;;;;
 
