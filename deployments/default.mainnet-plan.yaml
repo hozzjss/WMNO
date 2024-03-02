@@ -9,10 +9,17 @@ plan:
     - id: 0
       transactions:
         - contract-publish:
-            contract-name: airdrop
+            contract-name: not-token
             expected-sender: SP31596TY1N33159BQCVEC9H16HP0KQ2VTD140157
-            cost: 512500
-            path: contracts/airdrop.clar
+            cost: 26782629
+            path: contracts/not-token.clar
+            anchor-block-only: true
+            clarity-version: 2
+        - contract-publish:
+            contract-name: genesis-wrapper
+            expected-sender: SP31596TY1N33159BQCVEC9H16HP0KQ2VTD140157
+            cost: 27086877
+            path: contracts/genesis-wrapper.clar
             anchor-block-only: true
             clarity-version: 2
       epoch: "2.4"
