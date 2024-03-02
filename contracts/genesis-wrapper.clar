@@ -37,10 +37,10 @@
         amount))
 
 (define-private (wrap-mno (amount uint)) 
-    (contract-call? .wrapped-nothing-v9 wrap-nthng amount))
+    (contract-call? .not-token wrap-nthng amount))
 
 (define-private (unwrap-mno (amount uint)) 
-    (contract-call? .wrapped-nothing-v9 unwrap amount))
+    (contract-call? .not-token unwrap amount))
 
 (define-private (genesis-wrap-mno-internal (amount uint) (recipient principal))
     (begin

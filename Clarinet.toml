@@ -30,7 +30,7 @@ path = 'contracts/wrapped-nothing-v8.clar'
 clarity_version = 1
 epoch = 2.0
 
-[contracts.wrapped-nothing-v9]
+[contracts.not-token]
 path = 'contracts/wrapped-nothing-v9.clar'
 clarity_version = 2
 epoch = 2.4
