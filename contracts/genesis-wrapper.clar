@@ -1,6 +1,9 @@
+;; $NOT GENESIS
+
 ;; CONTRIBUTORS
 ;; ghislo.btc SP2SKMAR9WMD9DBJHC4XTQXPZCDNV1258PSJTRGTV
 ;; hz.btc SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ
+
 ;; ERROR CODES
 (define-constant ERR-ALL-FOR-NOTHING u1001)
 (define-constant ERR-YOU-POOR u1001)
@@ -11,7 +14,7 @@
 
 (define-constant ERR-USE-GENERIC-WRAPPER u2511)
 
-(define-constant SNAPSHOT-BLOCK  0xedbcfc85dd8cec409dd1d79eb02c8609c5722ddaa373d1ef9e1495ae6fad2a36)
+(define-constant SNAPSHOT-BLOCK 0xedbcfc85dd8cec409dd1d79eb02c8609c5722ddaa373d1ef9e1495ae6fad2a36)
 
 (define-data-var snapshot-changes-counter uint u0)
 
