@@ -5,8 +5,10 @@ authors = []
 telemetry = false
 cache_dir = './.cache'
 
+
 [[project.requirements]]
-contract_id = 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-10-ft-standard.ft-trait'
+contract_id = 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard'
+
 [contracts.airdrop]
 path = 'contracts/airdrop.clar'
 clarity_version = 2
