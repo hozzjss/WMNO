@@ -1,9 +1,7 @@
 ;; Error codes
-(define-constant EWW-GREEDY-MF u1001)
-(define-constant ERR-UNAUTHORIZED u1)
-(define-constant ERR-YOU-POOR u2)
-(define-constant ERR-YOU-FOMOD u3)
-(define-constant ERR-INVALID-PARAMS u4)
+(define-constant ERR-UNAUTHORIZED u401)
+(define-constant ERR-YOU-POOR u402)
+(define-constant ERR-INVALID-PARAMS u400)
 
 (define-constant WRAP-THRESHOLD (* u88 (pow u10 u12)))
 
@@ -46,10 +44,9 @@
 (define-public (transfer (amount uint) (from principal) (to principal) (memo (optional (buff 34))))
     (begin
         (asserts! (is-eq from tx-sender) (err ERR-UNAUTHORIZED))
-        (asserts! (not (is-eq to tx-sender)) (err ERR-UNAUTHORIZED))
+        (asserts! (not (is-eq to tx-sender)) (err ERR-INVALID-PARAMS))
         (asserts! (>= (ft-get-balance NOT from) amount) (err ERR-YOU-POOR))
         (ft-transfer? NOT amount from to)))
-    
 
 
 (define-read-only (get-name)
