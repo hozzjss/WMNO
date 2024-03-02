@@ -21,7 +21,7 @@ clarity_version = 1
 epoch = 2.0
 
 [contracts.genesis-wrapper]
-path = 'contracts/not-lockup.clar'
+path = 'contracts/genesis-wrapper.clar'
 clarity_version = 2
 epoch = 2.4
 
