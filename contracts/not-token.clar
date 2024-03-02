@@ -19,6 +19,7 @@
     
         (or 
             (and
+                ;; exclusive basically the threshold is a finish line
                 (> supply WRAP-THRESHOLD)
                 (<= (+ amount supply) MAX-SUPPLY))
             (is-eq contract-caller .genesis-wrapper))))
@@ -27,7 +28,11 @@
 (define-public (wrap-nthng (amount uint))
     (begin
         (asserts! (is-safe-to-wrap amount tx-sender) (err ERR-UNAUTHORIZED))
-        (unwrap! (contract-call? 'SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ.micro-nthng transfer (as-contract tx-sender) amount) (err ERR-YOU-POOR))
+        (unwrap! 
+            (contract-call? 
+                'SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ.micro-nthng 
+                transfer (as-contract tx-sender) amount) 
+            (err ERR-YOU-POOR))
         (ft-mint? NOT amount tx-sender)))
 
 
