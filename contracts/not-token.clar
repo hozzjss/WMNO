@@ -3,7 +3,7 @@
 (define-constant ERR-YOU-POOR u402)
 (define-constant ERR-INVALID-PARAMS u400)
 
-(define-constant WRAP-THRESHOLD (* u88 (pow u10 u12)))
+(define-constant WRAP-THRESHOLD (* u85 (pow u10 u12)))
 
 ;; 88,975,877,083,900
 (define-constant MAX-SUPPLY u88975877083900)
@@ -11,13 +11,23 @@
 
 (define-data-var contract-admin principal tx-sender)
 
+;; can only be set once when the threshold is met
+(define-data-var is-threshold-reached bool false)
+
 (define-fungible-token NOT MAX-SUPPLY)
+
+(define-private (update-threshold-state) 
+    (if (var-get is-threshold-reached) false
+        (var-set is-threshold-reached 
+            (>= (ft-get-supply NOT) WRAP-THRESHOLD))))
+
 
 (define-read-only (is-safe-to-wrap (amount uint) (wrapper principal)) 
     (let (
             (supply (ft-get-supply NOT)))
     
         (or 
+            (var-get is-threshold-reached)
             (and
                 ;; exclusive basically the threshold is a finish line
                 (> supply WRAP-THRESHOLD)
@@ -31,9 +41,11 @@
         (unwrap! 
             (contract-call? 
                 'SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ.micro-nthng 
-                transfer (as-contract tx-sender) amount) 
+                transfer (as-contract tx-sender) amount)
             (err ERR-YOU-POOR))
-        (ft-mint? NOT amount tx-sender)))
+        (try! (ft-mint? NOT amount tx-sender))
+        (update-threshold-state)
+        (ok true)))
 
 
 (define-public (unwrap (amount uint))
