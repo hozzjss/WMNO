@@ -65,14 +65,14 @@
 (define-private (genesis-wrap-wmno-internal (amount uint) (recipient principal))
     (begin
         (asserts! (is-eq u0 (get-wrapped-per-address-internal tx-sender)) (err ERR-ALL-FOR-NOTHING))
-        (try! (contract-call? .wrapped-nothing-v8 unwrap amount))
+        (try! (contract-call? 'SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ.wrapped-nothing-v8 unwrap amount))
         (genesis-wrap-mno-internal amount recipient)))
 
 (define-private (genesis-unwrap-wmno-internal (amount uint) (recipient principal))
     (begin
         (asserts! (is-eq amount (get-allowed-wmno-amount tx-sender)) (err ERR-ALL-FOR-NOTHING))
         (try! (genesis-unwrap-mno-internal amount))
-        (contract-call? .wrapped-nothing-v8 wrap-nthng amount)))
+        (contract-call? 'SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ.wrapped-nothing-v8 wrap-nthng amount)))
 
 (define-private (get-allowed-wmno-amount (address principal))
     (exclude address
@@ -80,7 +80,7 @@
                 (get-allowed-mno-amount-internal address)
                 (at-block SNAPSHOT-BLOCK
                     (unwrap-panic
-                        (contract-call? .wrapped-nothing-v8 get-balance address))))))
+                        (contract-call? 'SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ.wrapped-nothing-v8 get-balance address))))))
 
 (define-public (genesis-wrap)
         ;; can only wrap once
@@ -89,7 +89,7 @@
         )
             (if 
                 (and mno-unwrapped (> (get-allowed-mno-amount-internal tx-sender) u0))
-                    (try! (contract-call? .wrapped-nothing-v8 wrap-nthng (get-allowed-mno-amount-internal tx-sender)))
+                    (try! (contract-call? 'SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ.wrapped-nothing-v8 wrap-nthng (get-allowed-mno-amount-internal tx-sender)))
                 false)
             (map-set did-wrap-before tx-sender true)
             (genesis-wrap-wmno-internal (get-allowed-wmno-amount tx-sender) tx-sender)))
