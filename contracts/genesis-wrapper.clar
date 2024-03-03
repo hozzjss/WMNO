@@ -10,13 +10,8 @@
 
 ;; BLACKLIST
 (define-constant ASTERIA 'SP343J7DNE122AVCSC4HEK4MF871PW470ZSXJ5K66)
-(define-constant BRAD 'SPT9JHCME25ZBZM9WCGP7ZN38YA82F77YM5HM08B)
-
-(define-constant ERR-USE-GENERIC-WRAPPER u2511)
 
 (define-constant SNAPSHOT-BLOCK 0x45cdac46ee57d9076d3de881ff80406af6ad81f7524311a48a2b4712e23b7ea0)
-
-(define-data-var snapshot-changes-counter uint u0)
 
 (define-data-var total-wrapped uint u0)
 
@@ -30,9 +25,7 @@
 
 (define-private (exclude (address principal) (amount uint))
     (if
-        (or
-            (is-eq address BRAD)
-            (is-eq address ASTERIA))
+            (is-eq address ASTERIA)
         u0
         amount))
 
