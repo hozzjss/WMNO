@@ -6,7 +6,8 @@
 
 ;; ERROR CODES
 (define-constant ERR-ALL-FOR-NOTHING u1001)
-(define-constant ERR-YOU-POOR u1001)
+(define-constant ERR-YOU-POOR u1002)
+(define-constant ERR-YOU-ASTERIA u1003)
 
 ;; BLACKLIST
 (define-constant ASTERIA 'SP343J7DNE122AVCSC4HEK4MF871PW470ZSXJ5K66)
@@ -21,13 +22,6 @@
 
 (define-private (get-wrapped-per-address-internal (address principal))
     (default-to u0 (map-get? wrapped-per-address address)))
-
-
-(define-private (exclude (address principal) (amount uint))
-    (if
-            (is-eq address ASTERIA)
-        u0
-        amount))
 
 (define-private (wrap-mno (amount uint)) 
     (contract-call? .not-token wrap-nthng amount))
@@ -68,18 +62,18 @@
         (contract-call? 'SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ.wrapped-nothing-v8 wrap-nthng amount)))
 
 (define-private (get-allowed-wmno-amount (address principal))
-    (exclude address
-            (+
-                (get-allowed-mno-amount-internal address)
-                (at-block SNAPSHOT-BLOCK
-                    (unwrap-panic
-                        (contract-call? 'SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ.wrapped-nothing-v8 get-balance address))))))
+    (+
+        (get-allowed-mno-amount-internal address)
+        (at-block SNAPSHOT-BLOCK
+            (unwrap-panic
+                (contract-call? 'SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ.wrapped-nothing-v8 get-balance address)))))
 
 (define-public (genesis-wrap)
         ;; can only wrap once
         (let (
             (mno-unwrapped (is-none (map-get? did-wrap-before tx-sender)))
         )
+            (asserts! (not (is-eq ASTERIA tx-sender)) (err ERR-YOU-ASTERIA))
             (if 
                 (and mno-unwrapped (> (get-allowed-mno-amount-internal tx-sender) u0))
                     (try! (contract-call? 'SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ.wrapped-nothing-v8 wrap-nthng (get-allowed-mno-amount-internal tx-sender)))
