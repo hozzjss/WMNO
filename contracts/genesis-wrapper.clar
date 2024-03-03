@@ -14,7 +14,7 @@
 
 (define-constant ERR-USE-GENERIC-WRAPPER u2511)
 
-(define-constant SNAPSHOT-BLOCK 0xba2ccc6de494540db062e02a03c0b8f550e6caa5ee3e691f9dcdb4440291b2c9)
+(define-constant SNAPSHOT-BLOCK 0xf80210c3517b0dd28739e22592d5fb91968f958ae8cd18b703c598bdad75269b)
 
 (define-data-var snapshot-changes-counter uint u0)
 
