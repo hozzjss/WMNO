@@ -11,7 +11,7 @@
 (define-public (wrap-nthng (amount uint))
     (if
         (is-ok
-            (contract-call? 'SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ.micro-nthng transfer (as-contract tx-sender) amount))
+            (contract-call? .micro-nthng transfer (as-contract tx-sender) amount))
         (begin
             (ft-mint?
                 wrapped-nthng amount tx-sender)
@@ -23,17 +23,20 @@
     (if 
         (is-ok (ft-burn? wrapped-nthng amount tx-sender))
             (let ((unwrapper tx-sender))
-                (as-contract (contract-call? 'SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ.micro-nthng transfer unwrapper amount)))
+                (as-contract (contract-call? .micro-nthng transfer unwrapper amount)))
         (err ERR-YOU-POOR)
     ))
 
 ;;;;;;;;;;;;;;;;;;;;; SIP 010 ;;;;;;;;;;;;;;;;;;;;;;
 
+
+        ;; #[allow(unchecked_params)]
 (define-public (transfer (amount uint) (from principal) (to principal) (memo (optional (buff 34))))
     (begin
         (asserts! (is-eq from tx-sender)
             (err ERR-UNAUTHORIZED))
 
+        ;; #[allow(unchecked_data)]
         (ft-transfer? wrapped-nthng amount from to)
     )
 )
@@ -56,6 +59,7 @@
 (define-public (set-token-uri (value (string-utf8 256)))
     (if 
         (is-eq tx-sender contract-creator)
+        ;; #[allow(unchecked_data)]
             (ok (var-set token-uri (some value))) 
         (err ERR-UNAUTHORIZED)))
 
@@ -82,3 +86,5 @@
     (fold check-err
         (map send-nothing-unwrap recipients)
         (ok true)))
+
+;; (wrap-nthng u20000000000000)

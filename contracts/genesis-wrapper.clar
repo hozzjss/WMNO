@@ -1,4 +1,5 @@
-;; $NOT GENESIS
+;; $NOT GENESIS WRAPPER
+;; snapshot taken at 141500
 
 ;; CONTRIBUTORS
 ;; ghislo.btc SP2SKMAR9WMD9DBJHC4XTQXPZCDNV1258PSJTRGTV
@@ -25,10 +26,10 @@
     (default-to u0 (map-get? wrapped-per-address address)))
 
 (define-private (wrap-mno (amount uint)) 
-    (contract-call? .not-token wrap-nthng amount))
+    (contract-call? .not wrap-nthng amount))
 
 (define-private (unwrap-mno (amount uint)) 
-    (contract-call? .not-token unwrap amount))
+    (contract-call? .not unwrap amount))
 
 (define-private (get-allowed-mno-amount-internal (address principal))
         (default-to u0 (map-get? mno-snapshot address)))
@@ -40,7 +41,7 @@
             (unwrap-panic
                 (contract-call? .wrapped-nothing-v8 get-balance address)))))
 
-(define-public (genesis-wrap)
+(define-public (wrap)
         ;; can only wrap once
         (let (
             (eligible-wmno-amount (get-allowed-wmno-amount tx-sender))
@@ -59,7 +60,7 @@
             (var-set total-wrapped (+ (var-get total-wrapped) amount))
             (wrap-mno amount)))
 
-(define-public (genesis-unwrap)
+(define-public (unwrap)
     (let (
         (wrapped-amount (get-wrapped-per-address-internal tx-sender))
         (eligible-wmno-amount (get-allowed-wmno-amount tx-sender))
