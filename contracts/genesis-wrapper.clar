@@ -14,7 +14,7 @@
 ;; BLACKLIST
 (define-constant ASTERIA 'SP343J7DNE122AVCSC4HEK4MF871PW470ZSXJ5K66)
 
-(define-constant SNAPSHOT-BLOCK u141574)
+(define-constant SNAPSHOT-BLOCK u141576)
 
 (define-data-var total-wrapped uint u0)
 
