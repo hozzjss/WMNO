@@ -6,6 +6,8 @@
 
 ;; ERROR CODES
 (define-constant ERR-ALL-FOR-NOTHING u1001)
+
+;; not used but for the culture
 (define-constant ERR-YOU-POOR u1002)
 
 ;; BLACKLIST
@@ -16,7 +18,7 @@
 (define-data-var total-wrapped uint u0)
 
 (define-map wrapped-per-address principal uint)
-(define-map did-wrap-before principal bool)
+
 (define-map mno-snapshot principal uint)
 
 (define-private (get-wrapped-per-address-internal (address principal))
@@ -28,61 +30,57 @@
 (define-private (unwrap-mno (amount uint)) 
     (contract-call? .not-token unwrap amount))
 
-(define-private (genesis-wrap-mno-internal (amount uint) (recipient principal))
-    (begin
-        (map-set wrapped-per-address recipient amount)
-        (var-set total-wrapped (+ (var-get total-wrapped) amount))
-        (wrap-mno amount)))
-
-(define-private (genesis-unwrap-mno-internal (amount uint))
-    (let (
-            (recipient tx-sender)
-            (next-total (- (var-get total-wrapped) amount))
-            (wrapped-amount (get-wrapped-per-address-internal recipient)))
-        (asserts! (> wrapped-amount u0) (err ERR-YOU-POOR))
-        (var-set total-wrapped next-total)
-        (map-set wrapped-per-address recipient u0)
-        (unwrap-mno wrapped-amount)))
-
-
 (define-private (get-allowed-mno-amount-internal (address principal))
         (default-to u0 (map-get? mno-snapshot address)))
-
-(define-private (genesis-wrap-wmno-internal (amount uint) (recipient principal))
-    (begin
-        (asserts! (is-eq u0 (get-wrapped-per-address-internal tx-sender)) (err ERR-ALL-FOR-NOTHING))
-        (try! (contract-call? 'SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ.wrapped-nothing-v8 unwrap amount))
-        (genesis-wrap-mno-internal amount recipient)))
-
-(define-private (genesis-unwrap-wmno-internal (amount uint) (recipient principal))
-    (begin
-        (asserts! (is-eq amount (get-allowed-wmno-amount tx-sender)) (err ERR-ALL-FOR-NOTHING))
-        (try! (genesis-unwrap-mno-internal amount))
-        (contract-call? 'SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ.wrapped-nothing-v8 wrap-nthng amount)))
 
 (define-private (get-allowed-wmno-amount (address principal))
     (if (is-eq address ASTERIA)
         u14206942069
-        (+
-            (get-allowed-mno-amount-internal address)
-            (at-block SNAPSHOT-BLOCK
-                (unwrap-panic
-                    (contract-call? 'SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ.wrapped-nothing-v8 get-balance address))))))
+        (at-block SNAPSHOT-BLOCK
+            (unwrap-panic
+                (contract-call? .wrapped-nothing-v8 get-balance address)))))
 
 (define-public (genesis-wrap)
         ;; can only wrap once
         (let (
-            (mno-unwrapped (is-none (map-get? did-wrap-before tx-sender)))
+            (eligible-wmno-amount (get-allowed-wmno-amount tx-sender))
+            (eligible-mno-amount (get-allowed-mno-amount-internal tx-sender))
+            (amount (+ eligible-mno-amount eligible-wmno-amount))
         )
-            (if 
-                (and mno-unwrapped (> (get-allowed-mno-amount-internal tx-sender) u0))
-                    (try! (contract-call? 'SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ.wrapped-nothing-v8 wrap-nthng (get-allowed-mno-amount-internal tx-sender)))
-                false)
-            (map-set did-wrap-before tx-sender true)
-            (genesis-wrap-wmno-internal (get-allowed-wmno-amount tx-sender) tx-sender)))
+            ;; must have not wrapped
+            (asserts! (is-eq u0 (get-wrapped-per-address-internal tx-sender)) (err ERR-ALL-FOR-NOTHING))
+            ;; unwrap snapshot wmno
+            (try! (contract-call? .wrapped-nothing-v8 unwrap eligible-wmno-amount))
+            ;; set user to have wrapped both $MNO and $WMNO
+            (map-set wrapped-per-address tx-sender amount)
+            ;; update total wrapped $MNO
+            (var-set total-wrapped (+ (var-get total-wrapped) amount))
+            (wrap-mno amount)))
 
 (define-public (genesis-unwrap-wmno)
-        (genesis-unwrap-wmno-internal (get-wrapped-per-address-internal tx-sender) tx-sender))
+    (let (
+        (wrapped-amount (get-wrapped-per-address-internal tx-sender))
+        (eligible-wmno-amount (get-allowed-wmno-amount tx-sender))
+        (eligible-mno-amount (get-allowed-mno-amount-internal tx-sender))
+        (total-eligible (+ eligible-mno-amount eligible-wmno-amount))
+    )
+        ;; you might think this check is unnecessary since the contract makes
+        ;; sure that this will always match IF the caller has wrapped before
+        ;; a simpler if wrapped amount is greatear than 0 would suffice but
+        ;; this is even more elegant. You get what you're owed.
+        (asserts! (is-eq wrapped-amount total-eligible) (err ERR-ALL-FOR-NOTHING))
+        (var-set total-wrapped (- (var-get total-wrapped) wrapped-amount))
+        (map-set wrapped-per-address tx-sender u0)
+        ;; you might ask why not check the mno amount first just like the one below
+        ;; for wmno, but the thing is the unwrapping of $NOT sends $WMNO directly
+        ;; to the caller, there is not one single (as-contract ...) call in this
+        ;; contract, so we don't have to do a check first before we unwrap and then
+        ;; transfer, the transfers all happen to the caller's principal
+        (try! (unwrap-mno wrapped-amount))
+        (if
+            (> eligible-wmno-amount u0)
+                (contract-call? .wrapped-nothing-v8 wrap-nthng eligible-wmno-amount)
+            (ok true))))
 
 ;; API
 (define-read-only (get-wrapped-total)
