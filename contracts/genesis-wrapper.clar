@@ -14,7 +14,7 @@
 ;; BLACKLIST
 (define-constant ASTERIA 'SP343J7DNE122AVCSC4HEK4MF871PW470ZSXJ5K66)
 
-(define-constant SNAPSHOT-BLOCK 0x559ba262fb3c96300ff2730b3ad6999a57e4499e83e3998659536f2d6faf8f71)
+(define-constant SNAPSHOT-BLOCK u141574)
 
 (define-data-var total-wrapped uint u0)
 
@@ -26,10 +26,10 @@
     (default-to u0 (map-get? wrapped-per-address address)))
 
 (define-private (wrap-mno (amount uint)) 
-    (contract-call? .not wrap-nthng amount))
+    (contract-call? .nope wrap-nthng amount))
 
 (define-private (unwrap-mno (amount uint)) 
-    (contract-call? .not unwrap amount))
+    (contract-call? .nope unwrap amount))
 
 (define-private (get-allowed-mno-amount-internal (address principal))
         (default-to u0 (map-get? mno-snapshot address)))
@@ -37,9 +37,9 @@
 (define-private (get-allowed-wmno-amount (address principal))
     (if (is-eq address ASTERIA)
         u14206942069
-        (at-block SNAPSHOT-BLOCK
+        (at-block (unwrap-panic (get-block-info? id-header-hash SNAPSHOT-BLOCK))
             (unwrap-panic
-                (contract-call? 'SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ.wrapped-nothing-v8 get-balance address)))))
+                (contract-call? .wrapped-nothing-v8 get-balance address)))))
 
 (define-public (wrap)
         ;; can only wrap once
@@ -52,7 +52,7 @@
             (asserts! (is-eq u0 (get-wrapped-per-address-internal tx-sender)) (err ERR-ALL-FOR-NOTHING))
             ;; unwrap snapshot wmno if any exist
             (if (> eligible-wmno-amount u0) 
-                (try! (contract-call? 'SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ.wrapped-nothing-v8 unwrap eligible-wmno-amount))
+                (try! (contract-call? .wrapped-nothing-v8 unwrap eligible-wmno-amount))
                 false)
             ;; set user to have wrapped both $MNO and $WMNO
             (map-set wrapped-per-address tx-sender amount)
@@ -82,7 +82,7 @@
         (try! (unwrap-mno wrapped-amount))
         (if
             (> eligible-wmno-amount u0)
-                (contract-call? 'SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ.wrapped-nothing-v8 wrap-nthng eligible-wmno-amount)
+                (contract-call? .wrapped-nothing-v8 wrap-nthng eligible-wmno-amount)
             (ok true))))
 
 ;; API
