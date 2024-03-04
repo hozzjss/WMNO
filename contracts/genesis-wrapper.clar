@@ -39,7 +39,7 @@
         u14206942069
         (at-block SNAPSHOT-BLOCK
             (unwrap-panic
-                (contract-call? .wrapped-nothing-v8 get-balance address)))))
+                (contract-call? 'SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ.wrapped-nothing-v8 get-balance address)))))
 
 (define-public (wrap)
         ;; can only wrap once
@@ -52,7 +52,7 @@
             (asserts! (is-eq u0 (get-wrapped-per-address-internal tx-sender)) (err ERR-ALL-FOR-NOTHING))
             ;; unwrap snapshot wmno if any exist
             (if (> eligible-wmno-amount u0) 
-                (try! (contract-call? .wrapped-nothing-v8 unwrap eligible-wmno-amount))
+                (try! (contract-call? 'SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ.wrapped-nothing-v8 unwrap eligible-wmno-amount))
                 false)
             ;; set user to have wrapped both $MNO and $WMNO
             (map-set wrapped-per-address tx-sender amount)
@@ -82,7 +82,7 @@
         (try! (unwrap-mno wrapped-amount))
         (if
             (> eligible-wmno-amount u0)
-                (contract-call? .wrapped-nothing-v8 wrap-nthng eligible-wmno-amount)
+                (contract-call? 'SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ.wrapped-nothing-v8 wrap-nthng eligible-wmno-amount)
             (ok true))))
 
 ;; API

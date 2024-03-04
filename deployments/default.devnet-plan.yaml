@@ -8,77 +8,55 @@ plan:
   batches:
     - id: 0
       transactions:
-        - contract-publish:
-            contract-name: micro-nthng
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 9870
-            path: contracts/micro-nthng.clar
-            anchor-block-only: true
+        - requirement-publish:
+            contract-id: SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ.micro-nthng
+            remap-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            remap-principals:
+              SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 8860
+            path: "./.cache/requirements/SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ.micro-nthng.clar"
             clarity-version: 1
-        - contract-publish:
-            contract-name: sip-010-trait-ft-standard
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+        - requirement-publish:
+            contract-id: SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard
+            remap-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            remap-principals:
+              SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 8400
-            path: contracts/sip-010-trait-ft-standard.clar
-            anchor-block-only: true
+            path: "./.cache/requirements/SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.clar"
             clarity-version: 1
-        - contract-publish:
-            contract-name: wrapped-nothing-v8
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 25220
-            path: contracts/wrapped-nothing-v8.clar
-            anchor-block-only: true
-            clarity-version: 1
-        - contract-publish:
-            contract-name: sip-10-ft-standard
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 8160
-            path: contracts/sip-10-ft-standard.clar
-            anchor-block-only: true
-            clarity-version: 1
-        - contract-publish:
-            contract-name: wrapped-nothing-v5
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 24140
-            path: contracts/wrapped-nothing-v5.clar
-            anchor-block-only: true
-            clarity-version: 1
-        - contract-publish:
-            contract-name: wrapped-nothing-v6
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 24740
-            path: contracts/wrapped-nothing-v6.clar
-            anchor-block-only: true
+        - requirement-publish:
+            contract-id: SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ.wrapped-nothing-v8
+            remap-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            remap-principals:
+              SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 25290
+            path: "./.cache/requirements/SP32AEEF6WW5Y0NMJ1S8SBSZDAY8R5J32NBZFPKKZ.wrapped-nothing-v8.clar"
             clarity-version: 1
       epoch: "2.0"
     - id: 1
       transactions:
-        - contract-publish:
-            contract-name: airdrop
+        - contract-call:
+            contract-id: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.wrapped-nothing-v8
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 511390
-            path: contracts/airdrop.clar
-            anchor-block-only: true
-            clarity-version: 2
+            method: wrap-nthng
+            parameters:
+              - u20000000000000
+            cost: 486630
+      epoch: "2.0"
+    - id: 2
+      transactions:
         - contract-publish:
-            contract-name: fis-com-fis-sev
+            contract-name: not
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 9690
-            path: contracts/fis-com-fis-sev.clar
-            anchor-block-only: true
-            clarity-version: 2
-        - contract-publish:
-            contract-name: not-lockup
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 54760
-            path: contracts/not-lockup.clar
-            anchor-block-only: true
-            clarity-version: 2
-        - contract-publish:
-            contract-name: not-token
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 9080
+            cost: 52740
             path: contracts/not-token.clar
+            anchor-block-only: true
+            clarity-version: 2
+        - contract-publish:
+            contract-name: genesis-wrapper
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 486630
+            path: contracts/genesis-wrapper.clar
             anchor-block-only: true
             clarity-version: 2
       epoch: "2.4"
