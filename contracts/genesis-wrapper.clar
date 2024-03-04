@@ -49,8 +49,10 @@
         )
             ;; must have not wrapped
             (asserts! (is-eq u0 (get-wrapped-per-address-internal tx-sender)) (err ERR-ALL-FOR-NOTHING))
-            ;; unwrap snapshot wmno
-            (try! (contract-call? .wrapped-nothing-v8 unwrap eligible-wmno-amount))
+            ;; unwrap snapshot wmno if any exist
+            (if (> eligible-wmno-amount u0) 
+                (try! (contract-call? .wrapped-nothing-v8 unwrap eligible-wmno-amount))
+                false)
             ;; set user to have wrapped both $MNO and $WMNO
             (map-set wrapped-per-address tx-sender amount)
             ;; update total wrapped $MNO
