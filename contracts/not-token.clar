@@ -32,7 +32,7 @@
                 ;; exclusive basically the threshold is a finish line
                 (> supply WRAP-THRESHOLD)
                 (<= (+ amount supply) MAX-SUPPLY))
-            (is-eq contract-caller .genesis-wrapper))))
+            (is-eq contract-caller .napper))))
 
 
 (define-public (wrap-nthng (amount uint))
