@@ -57,7 +57,7 @@
             (var-set total-wrapped (+ (var-get total-wrapped) amount))
             (wrap-mno amount)))
 
-(define-public (genesis-unwrap-wmno)
+(define-public (genesis-unwrap)
     (let (
         (wrapped-amount (get-wrapped-per-address-internal tx-sender))
         (eligible-wmno-amount (get-allowed-wmno-amount tx-sender))
